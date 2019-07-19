@@ -7,6 +7,7 @@
 <script>
 import * as d3 from 'd3';
 import * as topojson from 'topojson';
+import { setInterval } from 'timers';
 export default {
   name: 'Globe',
   data: function() {
@@ -14,7 +15,7 @@ export default {
         rotationDelay: 3000,
         scaleFactor: 1,
         degPerSec: 6,
-        angles: { x: 0, y: 40, z: 0},
+        angles: { x: 0, y: 0, z: 0},
         colorWater: '#fff',
         colorLand: '#111',
         colorGraticule: '#ccc',
@@ -42,13 +43,7 @@ export default {
         world: null,
         svg: null,
         markerGroup: null,
-        locations: [
-                    {"latitude": 0.9781, "longitude": 51.4543, "gdistance": 0},
-                    {"latitude": 49.2827, "longitude": 123.1207, "gdistance": 0},
-                    {"latitude": -14.270972, "longitude": -170.132217, "gdistance": 0},
-                    {"latitude": 28.033886, "longitude": 1.659626, "gdistance": 0},
-                    {"latitude": 40.463667, "longitude": -3.74922, "gdistance": 0},
-                ],
+        location: {},
         center: null
       }
   },
@@ -66,9 +61,9 @@ export default {
         this.fill(this.land, this.colorLand);
 
         var self = this;
-        this.locations.forEach(function(location) {
-            self.marker(location, self.colorMarker);
-        })
+       
+            this.marker(this.location, self.colorMarker);
+       
         
         // this.marker(this.locations[1], this.colorMarker);
     },
@@ -158,7 +153,18 @@ export default {
           this.startRotation(this.rotationDelay);
           
           this.scale();
+
+          var self = this;
+
+          setInterval(function() {
+              self.getISS()
+          }, 1000);
       },
+      async getISS() {
+          let data = await d3.json('https://api.wheretheiss.at/v1/satellites/25544');
+          this.location = data;
+          console.log(data.longitude);
+      }
   },
   computed: {
       
