@@ -68,13 +68,13 @@ export default {
         // this.marker(this.locations[1], this.colorMarker);
     },
     marker(location, color) {
-        var p = this.projection([location.latitude, location.longitude]);
+        var p = this.projection([location.longitude, location.latitude]);
         var x = p[0];
         var y = p[1];
         this.context.beginPath();
         this.context.arc(x, y, 6, 0, 2 * Math.PI);
         
-        var gdistance = d3.geoDistance([location.latitude, location.longitude], this.projection.invert(this.center));
+        var gdistance = d3.geoDistance([location.longitude, location.latitude], this.projection.invert(this.center));
         this.context.fillStyle = location.gdistance < gdistance ? color : 'transparent';
 
         location.gdistance = gdistance;
@@ -102,6 +102,11 @@ export default {
             this.rotation[0] += this.diff * this.degPerMs;
             this.projection.rotate(this.rotation);
             this.render();
+
+            
+            // this.projection([location.longitude, location.latitude]);
+            
+            // this.render();
         }
         this.lastTime = this.now;
     },
@@ -158,11 +163,12 @@ export default {
 
           setInterval(function() {
               self.getISS()
-          }, 1000);
+          }, 10000);
       },
       async getISS() {
           let data = await d3.json('https://api.wheretheiss.at/v1/satellites/25544');
           this.location = data;
+          console.log(data.latitude);
           console.log(data.longitude);
       }
   },
