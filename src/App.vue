@@ -9,6 +9,12 @@
 </template>
 
 <style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #555;
+}
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
